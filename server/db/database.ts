@@ -10,6 +10,7 @@ const file = join(volumes.settings, "/db.json");
 console.log("FILE", file);
 
 if (!existsSync(file)) {
+  console.log("WRITING NEW FILE", JSON.stringify(defaultContent));
   writeFileSync(file, JSON.stringify(defaultContent));
 }
 
@@ -19,6 +20,8 @@ if (!existsSync(file)) {
 // The third argument is to ask JsonDB to save the database in an human readable format. (default false)
 // The last argument is the separator. By default it's slash (/)
 var db = new JsonDB(new Config(file, true, false, "/", true));
+
+console.log("DB", db);
 
 export async function getDatabase() {
   return db;
