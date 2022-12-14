@@ -1,8 +1,36 @@
 import Head from "next/head";
+import React from "react";
+import { useEffect } from "react";
 import { Label } from "../components/Label";
-import styles from "../styles/Home.module.css";
+import { useForm } from "react-hook-form";
 
-export default function Settings() {
+import styles from "../styles/Home.module.css";
+import axios from "axios";
+
+export default function SettingsPage() {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        setValue("defaultGlob", data.defaultGlob);
+        setValue("runEvery", data.runEvery);
+      });
+  }, []);
+
+  const onSubmit = async (data: any) => {
+    console.log("SuBMIT", data);
+
+    const result = await axios.post("/api/settings", data);
+    console.log("RESULT", result);
+  };
+
   return (
     <>
       <Head>
@@ -13,39 +41,30 @@ export default function Settings() {
       </div>
       <div className="card w-full bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title mt-0 mb-3">Default Values</h2>
-          <div className="flex gap-4">
-            <div className="w-full">
-              <Label
-                title="Matching Pattern"
-                tooltip="Comma seperated list of file extensions to match."
-              />
-              <input
-                type="text"
-                placeholder="Type here"
-                className="input input-bordered w-full"
-              />
-            </div>
-            <div>
-              <Label
-                title="Run task every"
-                tooltip="Run task at each interval (in minutes)"
-              />
-              <label className="input-group">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <h2 className="card-title mt-0 mb-3">Default Values</h2>
+            <div className="flex gap-4">
+              <div className="w-full">
+                <Label title="Matching Pattern" tooltip="Comma seperated list of file extensions to match." />
                 <input
-                  type="number"
-                  min="1"
-                  max="10080"
-                  placeholder="5"
-                  className="input input-bordered w-32"
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full"
+                  {...register("defaultGlob")}
                 />
-                <span>min</span>
-              </label>
+              </div>
+              <div>
+                <Label title="Run task every" tooltip="Run task at each interval (in minutes)" />
+                <label className="input-group">
+                  <input type="number" min="1" max="10080" placeholder="5" className="input input-bordered w-32" />
+                  <span>min</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className="card-actions justify-start mt-4">
-            <button className="btn btn-primary">Save Defaults</button>
-          </div>
+            <div className="card-actions justify-start mt-4">
+              <button className="btn btn-primary">Save Defaults</button>
+            </div>
+          </form>
         </div>
       </div>
     </>
