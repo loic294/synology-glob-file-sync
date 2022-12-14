@@ -1,9 +1,9 @@
 {
   "private": false,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev  -p 5020",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.js  -p 5020"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.7",
