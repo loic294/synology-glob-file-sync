@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getTasks, setTasks } from "../../server/db/tasks";
+import { getTasks, setTasks } from "../../../server/db/tasks";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const tasks = await getTasks();
@@ -16,6 +16,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default async function tasks(req: NextApiRequest, res: NextApiResponse) {
+  console.log("TASK INDEX", req);
   if (req.method === "GET") {
     await get(req, res);
   } else if (req.method === "POST") {

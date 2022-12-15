@@ -1,12 +1,17 @@
 import { readdirSync } from "fs";
+import { getDatabase } from "../db/database";
 
-function getFolderInDirectory(path: string) {
+function getFolderInDirectory(path: string, regex: RegExp) {
   return readdirSync(path, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
+    .filter((dirent) => dirent.isDirectory() && !regex.test(dirent.name))
     .map((dirent) => dirent.name);
 }
 
-export function getFolders(path: string) {
+export async function getFolders(path: string) {
+  const db = await getDatabase();
+  const foldersToExclude = await db.getData("/settings/excludeFolders");
+  const regex = new RegExp(foldersToExclude);
+
   const allFolders = [];
   const foldersToVisit = [path];
 
@@ -14,7 +19,7 @@ export function getFolders(path: string) {
     const currentFolder = foldersToVisit.pop() as string;
     allFolders.push(currentFolder);
 
-    const folders = getFolderInDirectory(currentFolder);
+    const folders = getFolderInDirectory(currentFolder, regex);
 
     for (const folder of folders) {
       const folderPath = `${currentFolder}/${folder}`;

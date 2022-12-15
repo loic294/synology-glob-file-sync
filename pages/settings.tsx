@@ -21,6 +21,7 @@ export default function SettingsPage() {
       .then((data) => {
         setValue("defaultGlob", data.defaultGlob);
         setValue("runEvery", data.runEvery);
+        setValue("excludeFolders", data.excludeFolders);
       });
   }, []);
 
@@ -56,10 +57,26 @@ export default function SettingsPage() {
               <div>
                 <Label title="Run task every" tooltip="Run task at each interval (in minutes)" />
                 <label className="input-group">
-                  <input type="number" min="1" max="10080" placeholder="5" className="input input-bordered w-32" />
+                  <input
+                    type="number"
+                    min="1"
+                    max="10080"
+                    placeholder="5"
+                    className="input input-bordered w-32"
+                    {...register("runEvery")}
+                  />
                   <span>min</span>
                 </label>
               </div>
+            </div>
+            <div className="w-full">
+              <Label title="Matching Pattern" tooltip="Regex of folders to exclude from search" />
+              <input
+                type="text"
+                placeholder="Enter regex to exclude folders"
+                className="input input-bordered w-full"
+                {...register("excludeFolders")}
+              />
             </div>
             <div className="card-actions justify-start mt-4">
               <button className="btn btn-primary">Save Defaults</button>

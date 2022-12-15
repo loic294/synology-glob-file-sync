@@ -1,8 +1,9 @@
-import { existsSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { JsonDB, Config } from "node-json-db";
 import { dirname, join } from "path";
 import { getVolumes } from "../folders/volumes";
 import { defaultContent } from "./defaultContent";
+import merge from "lodash-es/merge";
 
 const volumes = getVolumes();
 const file = join(volumes.settings, "/db.json");
@@ -12,6 +13,10 @@ console.log("FILE", file);
 if (!existsSync(file)) {
   console.log("WRITING NEW FILE", JSON.stringify(defaultContent));
   writeFileSync(file, JSON.stringify(defaultContent));
+} else {
+  const content = JSON.parse(readFileSync(file, "utf8"));
+  const merged = merge({}, defaultContent, content);
+  writeFileSync(file, JSON.stringify(merged));
 }
 
 // The first argument is the database filename. If no extension, '.json' is assumed and automatically added.

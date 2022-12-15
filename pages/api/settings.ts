@@ -10,8 +10,8 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
   res.status(200).json({
     ...settings,
-    source: getFolders(volumes.source),
-    target: getFolders(volumes.target),
+    source: await getFolders(volumes.source),
+    target: await getFolders(volumes.target),
   });
 }
 
