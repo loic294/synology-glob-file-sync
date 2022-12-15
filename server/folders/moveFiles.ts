@@ -24,7 +24,7 @@ export async function moveFiles(index: number) {
 
     console.log("FILES TO MOVE", files);
 
-    const promises = files.map((file) => moveFilePromise(file, task, source, target, index));
+    const promises = files.map((file) => moveFilePromise(file, source, target));
 
     console.log("PROMISES", promises);
 
