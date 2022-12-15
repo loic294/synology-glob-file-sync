@@ -5,7 +5,6 @@ import { findFiles } from "../../../server/task/findFiles";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   const index = req.query.id as unknown as number;
-  console.log("RUN INDEX", index);
   const files = await findFiles(index);
 
   res.status(200).json(files);

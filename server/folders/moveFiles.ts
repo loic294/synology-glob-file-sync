@@ -6,6 +6,9 @@ const fs = require("fs-extra");
 export async function moveFiles(index: number) {
   const db = await getDatabase();
   const task = await db.getData(`/tasks[${index}]`);
+
+  await db.push(`/tasks[${index}]`, { isRunning: true });
+
   const source = task.source;
   const target = task.target;
   const files = await findFiles(index);
@@ -19,6 +22,15 @@ export async function moveFiles(index: number) {
 
     await moveFile(src, dest);
 
+    const date = new Date();
+    const nextRun = new Date(date.getTime() + task.runEvery * 60000);
+
+    await db.push(`/tasks[${index}]`, {
+      isRunning: false,
+      nextRun: nextRun.getTime(),
+      nextRunReadable: nextRun.toLocaleString(),
+    });
+
     return files;
   });
 
@@ -30,6 +42,7 @@ async function moveFile(src: string, dest: string) {
     await fs.move(src, dest);
     console.log("Success moving file", src, dest);
   } catch (err) {
+    console.log("Failed moving file", src, dest);
     console.error(err);
   }
 }

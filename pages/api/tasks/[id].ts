@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { deleteTask, getTask, getTasks, updateTask } from "../../../server/db/tasks";
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  console.log("TASK PUT", req.body, req.query);
   const id = req.query.id as unknown as number;
 
   const task = await getTask(id);
@@ -11,7 +10,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function put(req: NextApiRequest, res: NextApiResponse) {
-  console.log("TASK PUT", req.body, req.query);
   const task = req.body;
   const id = req.query.id as unknown as number;
 
@@ -29,7 +27,6 @@ async function deleteMethod(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default async function singleTask(req: NextApiRequest, res: NextApiResponse) {
-  console.log("REQUEST", req);
   if (req.method === "GET") {
     await get(req, res);
   } else if (req.method === "POST") {

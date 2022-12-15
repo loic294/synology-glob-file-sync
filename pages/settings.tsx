@@ -26,10 +26,7 @@ export default function SettingsPage() {
   }, []);
 
   const onSubmit = async (data: any) => {
-    console.log("SuBMIT", data);
-
     const result = await axios.post("/api/settings", data);
-    console.log("RESULT", result);
   };
 
   return (

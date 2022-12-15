@@ -40,3 +40,4 @@ next-env.d.ts
 _test/*
 .dev
 .dev-2
+dist/*

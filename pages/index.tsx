@@ -72,7 +72,7 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
   }, []);
 
   const onSubmit = async (content: any) => {
-    console.log("SuBMIT", content);
+    console.log("Submit", content);
 
     if (isNew && setTasks) {
       const { data } = await axios.post("/api/tasks", content);
@@ -100,7 +100,7 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
 
   const moveFile = useCallback(async () => {
     const { data } = await axios.post(`/api/run/${index}`);
-    console.log("FILES", data);
+    console.log("MOVE DONE", data);
     setFiles([]);
     setMoving(true);
   }, [index]);
@@ -184,6 +184,7 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
               )}
 
               {!isNew && (
+                // @ts-ignore
                 <label htmlFor={`runModal${index}`} disabled={isDirty} className="btn" onClick={checkRun}>
                   Run now
                 </label>
@@ -210,6 +211,7 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
                 <label
                   htmlFor={`runModal${index}`}
                   className="btn btn-warning"
+                  // @ts-ignore
                   disabled={files.length === 0}
                   aria-disabled={files.length === 0}
                   onClick={moveFile}

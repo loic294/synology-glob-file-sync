@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
 import { getSettings, setSettings } from "../../server/db/settings";
 import { getFolders } from "../../server/folders/getFolders";
 import { getVolumes } from "../../server/folders/volumes";

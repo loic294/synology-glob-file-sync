@@ -3,4 +3,7 @@ export interface Tasks {
   runEvery: number;
   source: string;
   target: string;
+  nextRun?: number;
+  nextRunReadable?: string;
+  isRunning?: boolean;
 }

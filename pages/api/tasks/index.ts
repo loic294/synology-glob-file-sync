@@ -16,7 +16,6 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default async function tasks(req: NextApiRequest, res: NextApiResponse) {
-  console.log("TASK INDEX", req);
   if (req.method === "GET") {
     await get(req, res);
   } else if (req.method === "POST") {

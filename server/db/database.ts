@@ -3,7 +3,7 @@ import { JsonDB, Config } from "node-json-db";
 import { dirname, join } from "path";
 import { getVolumes } from "../folders/volumes";
 import { defaultContent } from "./defaultContent";
-import merge from "lodash-es/merge";
+import merge from "lodash/merge";
 
 const volumes = getVolumes();
 const file = join(volumes.settings, "/db.json");
@@ -25,8 +25,6 @@ if (!existsSync(file)) {
 // The third argument is to ask JsonDB to save the database in an human readable format. (default false)
 // The last argument is the separator. By default it's slash (/)
 var db = new JsonDB(new Config(file, true, false, "/", true));
-
-console.log("DB", db);
 
 export async function getDatabase() {
   return db;
