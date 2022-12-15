@@ -1,4 +1,4 @@
-import { getTasks } from "../db/tasks";
+import { getTask, getTasks } from "../db/tasks";
 import { moveFiles } from "../folders/moveFiles";
 
 export function initWatcher() {
@@ -6,23 +6,25 @@ export function initWatcher() {
 
   setInterval(() => {
     checkAllTasks();
-  }, (+process?.env?.INTERVAL as number | undefined) || 1000);
+  }, (+process?.env?.INTERVAL as number | undefined) || 10 * 1000);
 }
 
 async function checkAllTasks() {
-  console.log("Running Task");
+  console.log("Check If Task Should Run");
   const tasks = await getTasks();
-  const now = Date.now();
-  const promises = [];
+  const completedTasks = [];
 
   let index = 0;
   for (const task of tasks) {
-    if (now > task.nextRun && !task.isRunning) {
+    if (Date.now() > task.nextRun && !task.isRunning && task.runEvery > 0) {
       console.log("RUNNING TASK", task);
-      promises.push(async () => moveFiles(index));
+      await moveFiles(index);
+      completedTasks.push(await getTask(index));
     }
     index++;
   }
 
-  return Promise.all(promises);
+  console.log("COMPLETE TASKS", completedTasks);
+
+  return completedTasks;
 }

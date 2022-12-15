@@ -32,6 +32,11 @@ export async function updateTask(index: number, task: any): Promise<Tasks> {
   const db = await getDatabase();
   const path = `/tasks[${index}]`;
 
+  const date = new Date();
+  const nextRun = new Date(date.getTime() + task.runEvery * 60000);
+  task.nextRun = nextRun.getTime();
+  task.nextRunReadable = nextRun.toLocaleString();
+
   await db.push(path, task);
 
   return db.getData(path);

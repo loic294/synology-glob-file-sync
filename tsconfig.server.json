@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "lib": ["esnext"],
+    "allowJs": true,
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es5",
+    "module": "node16",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "sourceMap": false,
     "outDir": "dist",
     "rootDirs": ["server", "types", "utils"]
   },
-  "lib": ["es2015"],
   "include": ["server", "types", "utils"]
 }

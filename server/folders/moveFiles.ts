@@ -1,40 +1,62 @@
+import { Tasks } from "../../types/Tasks";
 import { getDatabase } from "../db/database";
 import { findFiles } from "../task/findFiles";
-
 const fs = require("fs-extra");
 
 export async function moveFiles(index: number) {
   const db = await getDatabase();
   const task = await db.getData(`/tasks[${index}]`);
 
-  await db.push(`/tasks[${index}]`, { isRunning: true });
+  console.log("IS RUNNING?", task.isRunning);
 
-  const source = task.source;
-  const target = task.target;
-  const files = await findFiles(index);
+  if (task.isRunning) {
+    return 0;
+  }
 
-  const promises = files.map(async (file) => {
-    const relativePath = file.replace(source, "");
-    console.log("RELATIVE PATH", relativePath);
+  try {
+    await db.push(`/tasks[${index}]`, { ...task, isRunning: true });
 
-    const src = file;
-    const dest = `${target}${relativePath}`;
+    console.log("UPDATED TASK", task);
 
-    await moveFile(src, dest);
+    const source = task.source;
+    const target = task.target;
+    const files = await findFiles(index);
+
+    console.log("FILES TO MOVE", files);
+
+    const promises = files.map((file) => moveFilePromise(file, task, source, target, index));
+
+    console.log("PROMISES", promises);
+
+    await Promise.all(promises);
 
     const date = new Date();
     const nextRun = new Date(date.getTime() + task.runEvery * 60000);
 
     await db.push(`/tasks[${index}]`, {
+      ...task,
       isRunning: false,
       nextRun: nextRun.getTime(),
       nextRunReadable: nextRun.toLocaleString(),
     });
 
-    return files;
-  });
+    return files.length;
+  } catch (e) {
+    console.error(e);
+    await db.push(`/tasks[${index}]`, { ...task, isRunning: false });
+  }
+}
 
-  return Promise.all(promises);
+async function moveFilePromise(file: string, task: Tasks, source: string, target: string, index: number) {
+  const db = await getDatabase();
+
+  const relativePath = file.replace(source, "");
+  console.log("RELATIVE PATH", relativePath);
+
+  const src = file;
+  const dest = `${target}${relativePath}`;
+
+  await moveFile(src, dest);
 }
 
 async function moveFile(src: string, dest: string) {
