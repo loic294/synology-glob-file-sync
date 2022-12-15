@@ -28,7 +28,7 @@ export async function moveFiles(index: number) {
 
     console.log("PROMISES", promises);
 
-    await Promise.all(promises);
+    const filesMoved = await Promise.all(promises);
 
     const date = new Date();
     const nextRun = new Date(date.getTime() + task.runEvery * 60000);
@@ -40,29 +40,29 @@ export async function moveFiles(index: number) {
       nextRunReadable: nextRun.toLocaleString(),
     });
 
-    return files.length;
+    console.log("SUCCESS MOVING FILES", filesMoved);
+
+    return filesMoved;
   } catch (e) {
     console.error(e);
     await db.push(`/tasks[${index}]`, { ...task, isRunning: false });
   }
 }
 
-async function moveFilePromise(file: string, task: Tasks, source: string, target: string, index: number) {
-  const db = await getDatabase();
-
+async function moveFilePromise(file: string, source: string, target: string) {
   const relativePath = file.replace(source, "");
-  console.log("RELATIVE PATH", relativePath);
 
   const src = file;
   const dest = `${target}${relativePath}`;
 
   await moveFile(src, dest);
+
+  return dest;
 }
 
 async function moveFile(src: string, dest: string) {
   try {
     await fs.move(src, dest);
-    console.log("Success moving file", src, dest);
   } catch (err) {
     console.log("Failed moving file", src, dest);
     console.error(err);
