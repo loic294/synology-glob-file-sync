@@ -2,11 +2,13 @@ import { getTask, getTasks } from "../db/tasks";
 import { moveFiles } from "../folders/moveFiles";
 
 export function initWatcher() {
-  console.log("INIT WATCHER");
+  console.log("Starting background task");
+
+  checkAllTasks();
 
   setInterval(() => {
     checkAllTasks();
-  }, (+process?.env?.INTERVAL as number | undefined) || 10 * 1000);
+  }, (+process?.env?.INTERVAL as number | undefined) || 60 * 1000);
 }
 
 async function checkAllTasks() {
@@ -18,8 +20,8 @@ async function checkAllTasks() {
   for (const task of tasks) {
     if (Date.now() > task.nextRun && !task.isRunning && task.runEvery > 0) {
       console.log("RUNNING TASK", task);
-      await moveFiles(index);
-      completedTasks.push(await getTask(index));
+      const filesUpdated = await moveFiles(index);
+      completedTasks.push({ filesMoved: filesUpdated, task: await getTask(index) });
     }
     index++;
   }

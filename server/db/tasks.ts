@@ -36,6 +36,7 @@ export async function updateTask(index: number, task: any): Promise<Tasks> {
   const nextRun = new Date(date.getTime() + task.runEvery * 60000);
   task.nextRun = nextRun.getTime();
   task.nextRunReadable = nextRun.toLocaleString();
+  task.isRunning = false;
 
   await db.push(path, task);
 

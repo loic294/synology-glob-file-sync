@@ -10,6 +10,7 @@ const port = process.env.PORT || 5020
 const app = next({ dev, hostname, port })
 const handle = app.getRequestHandler()
 
+console.log('Calling initWatcher()')
 initWatcher();
 
 app.prepare().then(() => {
