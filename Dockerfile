@@ -50,8 +50,12 @@ COPY --from=builder /app/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/.next/standalone ./
+# COPY --from=builder /app/.next/standalone ./ 
 COPY --from=builder /app/.next/static ./.next/static
+
+# DO NOT USE THE STANDALONE VERSION, USE THE CUSTOM SERVER!
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/server.js ./server.js
 
 # USER nextjs
 
