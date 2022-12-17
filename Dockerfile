@@ -28,10 +28,10 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN yarn build
+# RUN yarn build
 
 # If using npm comment out above and use below instead
-# RUN npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner
@@ -46,18 +46,14 @@ ENV NODE_ENV production
 # RUN addgroup --system --gid 1001 nodejs
 # RUN adduser --system --uid 1001 nextjs
 
+# DO NOT USE THE STANDALONE VERSION, USE THE CUSTOM SERVER!
+COPY --from=builder /app/.next ./.next
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
 
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-# COPY --from=builder /app/.next/standalone ./ 
-COPY --from=builder /app/.next/static ./.next/static
-
-# DO NOT USE THE STANDALONE VERSION, USE THE CUSTOM SERVER!
-COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.js ./server.js
 
 # USER nextjs
