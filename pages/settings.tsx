@@ -22,6 +22,8 @@ export default function SettingsPage() {
         setValue("defaultGlob", data.defaultGlob);
         setValue("runEvery", data.runEvery);
         setValue("excludeFolders", data.excludeFolders);
+        setValue("baseSource", data.baseSource);
+        setValue("baseTarget", data.baseTarget);
       });
   }, []);
 
@@ -43,7 +45,10 @@ export default function SettingsPage() {
             <h2 className="card-title mt-0 mb-3">Default Values</h2>
             <div className="flex gap-4">
               <div className="w-full">
-                <Label title="Matching Pattern" tooltip="Comma seperated list of file extensions to match." />
+                <Label
+                  title="Matching Pattern"
+                  tooltip="Comma seperated list of file extensions to match."
+                />
                 <input
                   type="text"
                   placeholder="Type here"
@@ -52,7 +57,10 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <Label title="Run task every" tooltip="Run task at each interval (in minutes)" />
+                <Label
+                  title="Run task every"
+                  tooltip="Run task at each interval (in minutes)"
+                />
                 <label className="input-group">
                   <input
                     type="number"
@@ -67,12 +75,39 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="w-full">
-              <Label title="Matching Pattern" tooltip="Regex of folders to exclude from search" />
+              <Label
+                title="Matching Pattern"
+                tooltip="Regex of folders to exclude from search"
+              />
               <input
                 type="text"
                 placeholder="Enter regex to exclude folders"
                 className="input input-bordered w-full"
                 {...register("excludeFolders")}
+              />
+            </div>
+            <div className="w-full">
+              <Label
+                title="Base Source Path"
+                tooltip="Base source path on the Synology file system"
+              />
+              <input
+                type="text"
+                placeholder="Enter source base path"
+                className="input input-bordered w-full"
+                {...register("baseSource")}
+              />
+            </div>
+            <div className="w-full">
+              <Label
+                title="Base Target Path"
+                tooltip="Base target path on the Synology file system"
+              />
+              <input
+                type="text"
+                placeholder="Enter target base path "
+                className="input input-bordered w-full"
+                {...register("baseTarget")}
               />
             </div>
             <div className="card-actions justify-start mt-4">

@@ -41,3 +41,5 @@ _test/*
 .dev
 .dev-2
 dist/*
+
+.env

@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:16-alpine AS deps
+FROM node:20-alpine AS deps
 
 LABEL com.centurylinklabs.watchtower.enable="true"
 

@@ -1,7 +1,15 @@
+import axios from "axios";
 import { Tasks } from "../../types/Tasks";
 import { getDatabase } from "../db/database";
 import { findFiles } from "../task/findFiles";
+import { getVolumes } from "./volumes";
+import { getSettings } from "../db/settings";
 const fs = require("fs-extra");
+const path = require("path");
+
+var appRoot = require("app-root-path").toString();
+
+const localProxy = "http://localhost:3939";
 
 export async function moveFiles(index: number) {
   const db = await getDatabase();
@@ -61,10 +69,65 @@ async function moveFilePromise(file: string, source: string, target: string) {
 }
 
 async function moveFile(src: string, dest: string) {
-  try {
-    await fs.move(src, dest);
-  } catch (err) {
-    console.log("Failed moving file", src, dest);
-    console.error(err);
+  const proxyExist = await checkProxyConnection();
+  console.log("PROXY EXIST", proxyExist);
+
+  if (!proxyExist) {
+    await installProxy();
+    throw new Error("Proxy was installed");
   }
+
+  const settings = await getSettings();
+
+  const data = {
+    source: src.startsWith("/source")
+      ? src.replace("/source", settings.baseSource)
+      : src,
+    target: dest.startsWith("/target")
+      ? dest.replace("/target", settings.baseTarget)
+      : dest,
+  };
+
+  await axios.post(`${localProxy}/moveFile`, data);
+}
+
+async function checkProxyConnection() {
+  try {
+    const response = await axios.get(`${localProxy}/health`);
+    return response.data.message === "ok";
+  } catch (e) {
+    return false;
+  }
+}
+
+async function installProxy() {
+  const proxyFileName = "fileMove.js";
+  const volumes = getVolumes();
+  const file = path.join(volumes.settings, "/", proxyFileName);
+
+  console.log("PROXY FILE", file);
+
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(file)) {
+      fs.readFile(file, { encoding: "utf8" }, (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const proxyDestination = `${appRoot}/runnable/${proxyFileName}`;
+        console.log("PROXY DEST", proxyDestination);
+
+        fs.writeFile(proxyDestination, data, (err) => {
+          if (err) {
+            reject(err);
+          }
+
+          resolve(true);
+        });
+      });
+    } else {
+      resolve(false);
+    }
+  });
 }

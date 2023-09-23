@@ -37,7 +37,9 @@ export default function Folders() {
       <div className="prose mb-6">
         <h1>New Sync task</h1>
       </div>
-      {settings.defaultGlob && <TaskComponent key={-1} isNew settings={settings} setTasks={setTasks} />}
+      {settings.defaultGlob && (
+        <TaskComponent key={-1} isNew settings={settings} setTasks={setTasks} />
+      )}
 
       <div className="prose mt-12 mb-6">
         <h1>All Sync Tasks</h1>
@@ -45,7 +47,13 @@ export default function Folders() {
       {tasks &&
         tasks.length > 0 &&
         tasks.map((task: any, index: number) => (
-          <TaskComponent key={index} index={index} task={task} settings={settings} setTasks={setTasks} />
+          <TaskComponent
+            key={index}
+            index={index}
+            task={task}
+            settings={settings}
+            setTasks={setTasks}
+          />
         ))}
     </>
   );
@@ -69,6 +77,8 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
     setValue("runEvery", isNew ? settings.runEvery : task.runEvery);
     setValue("source", isNew ? settings.source[0] : task.source);
     setValue("target", isNew ? settings.target[0] : task.target);
+    setValue("baseSource", isNew ? settings.baseSource : task.baseSource);
+    setValue("baseTarget", isNew ? settings.baseTarget : task.baseTarget);
   }, []);
 
   const onSubmit = async (content: any) => {
@@ -117,7 +127,9 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
         <div className="card-body">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex justify-between gap-4">
-              <h2 className="card-title mt-0 mb-3">{isNew ? "New Sync Task" : `Task #${index + 1}`}</h2>
+              <h2 className="card-title mt-0 mb-3">
+                {isNew ? "New Sync Task" : `Task #${index + 1}`}
+              </h2>
               {!isNew && (
                 <label htmlFor={`deleteModal${index}`} className="btn">
                   <FeatherIcon icon="trash-2" />
@@ -127,16 +139,28 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
 
             <div className="flex w-full align-top justify-between gap-4">
               <div className="w-full">
-                <Label title="Source" tooltip="The folder where the files are located." />
-                <select className="select select-bordered w-full" {...register("source")}>
+                <Label
+                  title="Source"
+                  tooltip="The folder where the files are located."
+                />
+                <select
+                  className="select select-bordered w-full"
+                  {...register("source")}
+                >
                   {settings?.source?.map((source: string) => (
                     <option>{source}</option>
                   ))}
                 </select>
               </div>
               <div className="w-full">
-                <Label title="Destination" tooltip="The folder where the files will be transfered." />
-                <select className="select select-bordered w-full" {...register("target")}>
+                <Label
+                  title="Destination"
+                  tooltip="The folder where the files will be transfered."
+                />
+                <select
+                  className="select select-bordered w-full"
+                  {...register("target")}
+                >
                   {settings?.target?.map((target: string) => (
                     <option>{target}</option>
                   ))}
@@ -146,7 +170,10 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
 
             <div className="flex gap-4">
               <div className="w-full">
-                <Label title="Matching Pattern" tooltip="Comma seperated list of file extensions to match." />
+                <Label
+                  title="Matching Pattern"
+                  tooltip="Comma seperated list of file extensions to match."
+                />
                 <input
                   type="text"
                   placeholder="Type here"
@@ -155,7 +182,10 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
                 />
               </div>
               <div>
-                <Label title="Run task every" tooltip="Run task at each interval (in minutes)" />
+                <Label
+                  title="Run task every"
+                  tooltip="Run task at each interval (in minutes)"
+                />
                 <label className="input-group">
                   <input
                     type="number"
@@ -185,7 +215,12 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
 
               {!isNew && (
                 // @ts-ignore
-                <label htmlFor={`runModal${index}`} disabled={isDirty} className="btn" onClick={checkRun}>
+                <label
+                  htmlFor={`runModal${index}`}
+                  disabled={isDirty}
+                  className="btn"
+                  onClick={checkRun}
+                >
                   Run now
                 </label>
               )}
@@ -197,15 +232,23 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
       {/** RUN MODAL */}
       {!isNew && (
         <>
-          <input type="checkbox" id={`runModal${index}`} className="modal-toggle" />
+          <input
+            type="checkbox"
+            id={`runModal${index}`}
+            className="modal-toggle"
+          />
           <div className="modal">
             <div className="modal-box relative">
-              <label htmlFor={`runModal${index}`} className="btn btn-sm btn-circle absolute right-2 top-2">
+              <label
+                htmlFor={`runModal${index}`}
+                className="btn btn-sm btn-circle absolute right-2 top-2"
+              >
                 ✕
               </label>
               <h3 className="font-bold text-lg">Confirm</h3>
               <p className="py-4">
-                We found <b>{files.length} files</b> to transfer from <b>{task.source}</b> to <b>{task.target}</b>
+                We found <b>{files.length} files</b> to transfer from{" "}
+                <b>{task.source}</b> to <b>{task.target}</b>
               </p>
               <div className="modal-action">
                 <label
@@ -226,16 +269,29 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
 
       {!isNew && (
         <>
-          <input type="checkbox" id={`deleteModal${index}`} className="modal-toggle" />
+          <input
+            type="checkbox"
+            id={`deleteModal${index}`}
+            className="modal-toggle"
+          />
           <div className="modal">
             <div className="modal-box relative">
-              <label htmlFor={`deleteModal${index}`} className="btn btn-sm btn-circle absolute right-2 top-2">
+              <label
+                htmlFor={`deleteModal${index}`}
+                className="btn btn-sm btn-circle absolute right-2 top-2"
+              >
                 ✕
               </label>
               <h3 className="font-bold text-lg">Confirm</h3>
-              <p className="py-4">Are you sure you want to delete the task #{index + 1}?</p>
+              <p className="py-4">
+                Are you sure you want to delete the task #{index + 1}?
+              </p>
               <div className="modal-action">
-                <label htmlFor={`deleteModal${index}`} className="btn btn-error" onClick={deleteTask}>
+                <label
+                  htmlFor={`deleteModal${index}`}
+                  className="btn btn-error"
+                  onClick={deleteTask}
+                >
                   Delete
                 </label>
               </div>

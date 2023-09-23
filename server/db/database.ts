@@ -8,14 +8,16 @@ import merge from "lodash/merge";
 const volumes = getVolumes();
 const file = join(volumes.settings, "/db.json");
 
-console.log("FILE", file);
+console.log("DB FILE", file);
 
 if (!existsSync(file)) {
   console.log("WRITING NEW FILE", JSON.stringify(defaultContent));
   writeFileSync(file, JSON.stringify(defaultContent));
 } else {
   const content = JSON.parse(readFileSync(file, "utf8"));
+  console.log("EXISTING DB", content);
   const merged = merge({}, defaultContent, content);
+  console.log("MERGE DB", merged);
   writeFileSync(file, JSON.stringify(merged));
 }
 
