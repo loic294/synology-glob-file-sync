@@ -4,6 +4,7 @@ import { Label } from "../components/Label";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import FeatherIcon from "feather-icons-react";
+import { NetworkCheck } from "../components/NetworkCheck";
 
 export default function Folders() {
   const [settings, setSettings] = React.useState({
@@ -34,6 +35,11 @@ export default function Folders() {
       <Head>
         <title>Folders - Synology Glob File Sync</title>
       </Head>
+
+      <div className="mb-6">
+        <NetworkCheck />
+      </div>
+
       <div className="prose mb-6">
         <h1>New Sync task</h1>
       </div>

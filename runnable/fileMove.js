@@ -30,6 +30,7 @@ async function moveFileHandler(req, res) {
  */
 function response(status, res, data) {
   res.setHeader("Content-Type", "application/json");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.writeHead(status);
   res.end(JSON.stringify(data));
 }
