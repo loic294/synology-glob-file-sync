@@ -100,28 +100,29 @@ async function checkProxyConnection() {
   }
 }
 
-async function installProxy() {
+export async function installProxy() {
   const proxyFileName = "fileMove.js";
   const volumes = getVolumes();
-  const file = path.join(volumes.settings, "/", proxyFileName);
+  const prxoyFileInSettings = path.join(volumes.settings, "/", proxyFileName);
+  const proxyFile = path.join(appRoot, "/runnable/", proxyFileName);
 
-  console.log("PROXY FILE", file);
+  console.log("PROXY FILE", proxyFile);
+  console.log("PROXY DEST", prxoyFileInSettings);
 
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(file)) {
-      fs.readFile(file, { encoding: "utf8" }, (err, data) => {
+    if (!fs.existsSync(prxoyFileInSettings)) {
+      fs.readFile(proxyFile, { encoding: "utf8" }, (err, data) => {
         if (err) {
           reject(err);
           return;
         }
 
-        const proxyDestination = `${appRoot}/runnable/${proxyFileName}`;
-        console.log("PROXY DEST", proxyDestination);
-
-        fs.writeFile(proxyDestination, data, (err) => {
+        fs.writeFile(prxoyFileInSettings, data, (err) => {
           if (err) {
             reject(err);
           }
+
+          console.log("Proxy File Copied to", prxoyFileInSettings);
 
           resolve(true);
         });

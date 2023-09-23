@@ -24,7 +24,10 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   });
 }
 
-export default async function hello(req: NextApiRequest, res: NextApiResponse) {
+export default async function settings(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "GET") {
     await get(req, res);
   } else if (req.method === "POST") {

@@ -19,6 +19,10 @@ export function NetworkCheck() {
     setInterval(checkNetwork, 5000);
   }, []);
 
+  const installProxy = async () => {
+    axios.post("/api/installProxy");
+  };
+
   if (!networkIssue) {
     return null;
   }
@@ -42,6 +46,9 @@ export function NetworkCheck() {
         The local proxy isn't working. Please enable it so the files can be
         moved between folders.
       </span>
+      <button className="btn btn-sm btn-outline" onClick={installProxy}>
+        Install Proxy
+      </button>
     </div>
   );
 }
