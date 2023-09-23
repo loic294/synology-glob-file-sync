@@ -220,9 +220,9 @@ function TaskComponent({ settings, index, task, isNew, setTasks }: any) {
               )}
 
               {!isNew && (
-                // @ts-ignore
                 <label
                   htmlFor={`runModal${index}`}
+                  // @ts-ignore
                   disabled={isDirty}
                   className="btn"
                   onClick={checkRun}
