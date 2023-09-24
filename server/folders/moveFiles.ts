@@ -91,7 +91,7 @@ async function moveFile(src: string, dest: string) {
   await axios.post(`${localProxy}/moveFile`, data);
 }
 
-async function checkProxyConnection() {
+export async function checkProxyConnection() {
   try {
     const response = await axios.get(`${localProxy}/health`);
     return response.data.message === "ok";

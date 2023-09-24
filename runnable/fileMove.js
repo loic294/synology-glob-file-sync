@@ -1,8 +1,11 @@
 const http = require("http");
 const fs = require("fs");
-const { resolve } = require("path");
 const host = "localhost";
 const port = 3939;
+
+if (process.pid) {
+  console.log("This process is your pid " + process.pid);
+}
 
 /**
  * Handlers
@@ -17,9 +20,13 @@ async function moveFileHandler(req, res) {
   const { source, target } = JSON.parse(req.body);
 
   try {
-    fs.renameSync(source, target);
+    fs.copyFileSync(source, target);
+    console.log("Moved file from", source, "to", target);
+    fs.rmSync(source);
+    console.log("Delete file", source);
   } catch (e) {
     error(res, e);
+    return;
   }
 
   response(200, res, { status: "success", source, target });
@@ -36,7 +43,9 @@ function response(status, res, data) {
 }
 
 function error(res, e) {
+  console.error("ERROR", e);
   response(500, res, { status: 500, message: e.message, stack: e.stack });
+  throw e;
 }
 
 async function getBodyContent(req) {

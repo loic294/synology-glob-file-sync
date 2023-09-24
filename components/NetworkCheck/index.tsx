@@ -6,9 +6,9 @@ export function NetworkCheck() {
 
   const checkNetwork = async () => {
     try {
-      const response = await axios.get("http://localhost:3939/health");
-      console.log("NETWORK CHECK", response.data, response.data.message);
-      setNetworkIssue(response.data.message !== "ok");
+      const response = await axios.get("/api/isProxyActive");
+      console.log("NETWORK CHECK", response.data, response.data.isProxyActive);
+      setNetworkIssue(!response.data.isProxyActive);
     } catch (e) {
       setNetworkIssue(true);
     }
