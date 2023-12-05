@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const path = require("path");
 const host = "localhost";
 const port = 3939;
 
@@ -20,10 +21,15 @@ async function moveFileHandler(req, res) {
   const { source, target } = JSON.parse(req.body);
 
   try {
+    const dir = path.basename(target);
+    if (!fs.existsSync(dir)){
+      console.log('Creating Target DIR', dir);
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.copyFileSync(source, target);
-    console.log("Moved file from", source, "to", target);
+    console.log('Moved file from', source, 'to', target);
     fs.rmSync(source);
-    console.log("Delete file", source);
+    console.log('Delete file', source);
   } catch (e) {
     error(res, e);
     return;
@@ -45,7 +51,7 @@ function response(status, res, data) {
 function error(res, e) {
   console.error("ERROR", e);
   response(500, res, { status: 500, message: e.message, stack: e.stack });
-  throw e;
+  // throw e;
 }
 
 async function getBodyContent(req) {
