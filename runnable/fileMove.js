@@ -21,7 +21,7 @@ async function moveFileHandler(req, res) {
   const { source, target } = JSON.parse(req.body);
 
   try {
-    const dir = path.basename(target);
+    const dir = path.join(target, "../");
     if (!fs.existsSync(dir)){
       console.log('Creating Target DIR', dir);
       fs.mkdirSync(dir, { recursive: true });
