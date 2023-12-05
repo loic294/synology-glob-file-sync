@@ -15,9 +15,11 @@ export async function moveFiles(index: number) {
   const db = await getDatabase();
   const task = await db.getData(`/tasks[${index}]`);
 
+  console.log('TASK TO RUN', task);
   console.log("IS RUNNING?", task.isRunning);
 
   if (task.isRunning) {
+    console.log('TASK ALREADY RUNNING');
     return 0;
   }
 
