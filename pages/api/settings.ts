@@ -7,6 +7,9 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   const volumes = getVolumes();
   const settings = await getSettings();
 
+  console.log('VOLUMES', volumes);
+  console.log('SETTINGS', settings);
+
   res.status(200).json({
     ...settings,
     source: await getFolders(volumes.source),
